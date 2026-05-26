@@ -1,0 +1,13 @@
+{
+  "hooks": [
+    {
+      "matcher": "Stop",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "node scripts/session-summary.js"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "claude-project-status",
+  "version": "1.0.0",
+  "description": "Track project status across multiple repos with STATUS blocks, session summaries, and a central dashboard. Never lose context when switching projects.",
+  "author": {
+    "name": "kursku",
+    "url": "https://github.com/kursku"
+  },
+  "homepage": "https://github.com/kursku/claude-project-status",
+  "repository": "https://github.com/kursku/claude-project-status",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "project-tracking",
+    "status",
+    "dashboard",
+    "multi-project",
+    "context-switching",
+    "skills",
+    "productivity"
+  ]
+}
