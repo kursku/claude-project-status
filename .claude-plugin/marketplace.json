@@ -1,0 +1,31 @@
+{
+  "name": "claude-project-status",
+  "owner": {
+    "name": "kursku",
+    "email": "nick@nickbargiela.com.br"
+  },
+  "metadata": {
+    "description": "Project status tracking plugins by kursku",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-project-status",
+      "source": "./",
+      "description": "Track project status across multiple repos with STATUS blocks, session summaries, and a central dashboard. Never lose context when switching projects.",
+      "version": "1.0.0",
+      "author": {
+        "name": "kursku"
+      },
+      "category": "productivity",
+      "keywords": [
+        "project-tracking",
+        "status",
+        "dashboard",
+        "multi-project",
+        "context-switching",
+        "productivity"
+      ]
+    }
+  ]
+}
