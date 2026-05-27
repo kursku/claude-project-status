@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "claude-project-status",
-      "source": "./",
+      "source": "./plugins/claude-project-status",
       "description": "Track project status across multiple repos with STATUS blocks, session summaries, and a central dashboard. Never lose context when switching projects.",
       "version": "1.0.0",
       "author": {
