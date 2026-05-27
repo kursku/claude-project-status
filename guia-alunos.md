@@ -11,13 +11,19 @@ Esse plugin faz o Claude salvar onde você parou em cada projeto. Quando voltar,
 *📦 Como instalar (VS Code com Claude Code)*
 
 1. Abre o terminal no VS Code
-2. Digita:
+2. Primeiro, adiciona o marketplace (só precisa fazer uma vez):
 
 ```
-claude plugin add kursku/claude-project-status
+claude settings set extraKnownMarketplaces.claude-project-status '{"source":{"source":"github","repo":"kursku/claude-project-status"}}'
 ```
 
-3. Pronto. Agora você tem 3 comandos novos:
+3. Depois instala o plugin:
+
+```
+claude plugin install claude-project-status@claude-project-status
+```
+
+4. Pronto. Agora você tem 3 comandos novos:
 - `/update-status` → salva o estado do projeto
 - `/dashboard` → mostra todos os projetos
 - `/prioritize` → sugere o que trabalhar agora
@@ -47,21 +53,15 @@ Troca `maria` pelo seu nome de usuário e `meus-projetos` pela pasta onde ficam 
 *💬 Como instalar no Cowork (claude.ai/code)*
 
 1. Abre o Cowork
-2. Digita no chat:
+2. Vai em Settings (engrenagem) → *Plugin Marketplaces*
+3. Adiciona um marketplace novo:
+   - Nome: `claude-project-status`
+   - Repo: `kursku/claude-project-status`
+4. Depois digita no chat:
 
 ```
-/plugin install claude-project-status@kursku
+/plugin install claude-project-status@claude-project-status
 ```
-
-Se pedir pra adicionar o marketplace, aceita. Ele vai buscar direto do GitHub.
-
-*Se não funcionar automaticamente*, adiciona manualmente:
-- Abre Settings (engrenagem)
-- Vai em *Plugins* ou *Plugin Marketplaces*
-- Adiciona como marketplace extra:
-  - Nome: `kursku`
-  - Repo: `kursku/claude-project-status`
-- Depois instala: `/plugin install claude-project-status@kursku`
 
 Pronto. Agora você tem os mesmos 3 comandos:
 - `/update-status` → salva o estado do projeto
