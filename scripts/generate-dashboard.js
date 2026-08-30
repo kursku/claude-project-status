@@ -9,18 +9,25 @@ import os from 'node:os'
 const HOME = os.homedir()
 const OUTPUT = path.join(HOME, 'PROJECTS.md')
 
-function getConfig() {
-  const configPath = path.join(HOME, '.project-status.json')
-  const defaults = { scanDirs: [HOME] }
-  try {
-    const raw = fs.readFileSync(configPath, 'utf8')
-    return { ...defaults, ...JSON.parse(raw) }
-  } catch {
-    return defaults
-  }
+function expandHome(dir) {
+  if (dir === '~') return HOME
+  if (dir.startsWith('~/') || dir.startsWith('~\\')) return path.join(HOME, dir.slice(2))
+  return dir
 }
 
-function parseStatusBlock(content) {
+export function getConfig() {
+  const configPath = path.join(HOME, '.project-status.json')
+  const defaults = { scanDirs: [HOME], scanDepth: 1 }
+  let config = defaults
+  try {
+    const raw = fs.readFileSync(configPath, 'utf8')
+    config = { ...defaults, ...JSON.parse(raw) }
+  } catch { /* use defaults */ }
+
+  return { ...config, scanDirs: config.scanDirs.map(expandHome) }
+}
+
+export function parseStatusBlock(content) {
   const match = content.match(/<!--\s*STATUS\s*\n([\s\S]*?)-->/)
   if (!match) return null
 
@@ -45,34 +52,37 @@ function parseStatusBlock(content) {
   }
 }
 
-function findProjects(scanDirs) {
+const SKIP_DIRS = new Set(['node_modules', 'dist', 'build', '__pycache__'])
+
+function scanDir(dir, depth, projects) {
+  let entries
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }) } catch { return }
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue
+    if (entry.name.startsWith('.') || SKIP_DIRS.has(entry.name)) continue
+
+    const entryPath = path.join(dir, entry.name)
+    const claudeMd = path.join(entryPath, 'CLAUDE.md')
+
+    if (fs.existsSync(claudeMd)) {
+      try {
+        const content = fs.readFileSync(claudeMd, 'utf8')
+        const status = parseStatusBlock(content)
+        if (status) projects.push({ ...status, path: entryPath, folder: entry.name })
+      } catch { /* skip unreadable */ }
+    }
+
+    if (depth > 1) scanDir(entryPath, depth - 1, projects)
+  }
+}
+
+export function findProjects(scanDirs, scanDepth = 1) {
   const projects = []
 
   for (const baseDir of scanDirs) {
     if (!fs.existsSync(baseDir)) continue
-
-    let entries
-    try { entries = fs.readdirSync(baseDir, { withFileTypes: true }) } catch { continue }
-
-    for (const entry of entries) {
-      if (!entry.isDirectory()) continue
-      if (entry.name.startsWith('.') || entry.name === 'node_modules') continue
-
-      const claudeMd = path.join(baseDir, entry.name, 'CLAUDE.md')
-      if (!fs.existsSync(claudeMd)) continue
-
-      try {
-        const content = fs.readFileSync(claudeMd, 'utf8')
-        const status = parseStatusBlock(content)
-        if (!status) continue
-
-        projects.push({
-          ...status,
-          path: path.join(baseDir, entry.name),
-          folder: entry.name
-        })
-      } catch { /* skip unreadable */ }
-    }
+    scanDir(baseDir, scanDepth, projects)
   }
 
   return projects
@@ -98,7 +108,7 @@ function prioOrder(p) {
 
 function generate() {
   const config = getConfig()
-  const projects = findProjects(config.scanDirs)
+  const projects = findProjects(config.scanDirs, config.scanDepth)
 
   projects.sort((a, b) => prioOrder(a.prioridade) - prioOrder(b.prioridade))
 
@@ -123,4 +133,6 @@ function generate() {
   console.log(`✅ Dashboard generated: ${OUTPUT} (${projects.length} projects)`)
 }
 
-generate()
+if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.dirname, 'generate-dashboard.js')) {
+  generate()
+}
