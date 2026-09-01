@@ -75,7 +75,16 @@ Create `~/.project-status.json` to customize behavior:
 }
 ```
 
-**`scanDirs`** — directories to scan for projects with STATUS blocks (default: home directory)
+**`scanDirs`** — directories to scan for projects with STATUS blocks (default: home directory). A leading `~` is expanded to your home directory.
+
+**`scanDepth`** — how many directory levels to recurse into each `scanDirs` entry looking for `CLAUDE.md` (default: `1`, i.e. only direct subdirectories). Useful for hub-style layouts, e.g.:
+
+```json
+{
+  "scanDirs": ["~/Voyager"],
+  "scanDepth": 2
+}
+```
 
 **`hooks.post-update`** — commands to run after `/update-status` completes (e.g., sync to a database, notify a webhook)
 

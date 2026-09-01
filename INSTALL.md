@@ -40,6 +40,10 @@ Crie `~/.project-status.json`:
 }
 ```
 
+`~` em `scanDirs` é expandido para o home. Use `scanDepth` (default `1`) para
+escanear níveis mais profundos, ex.: `"scanDirs": ["~/Voyager"], "scanDepth": 2`
+em layouts com hubs (`hub/projeto/CLAUDE.md`).
+
 ## 5. (Opcional) Configure o hook Stop
 
 No seu `~/.claude/settings.json`, adicione:
